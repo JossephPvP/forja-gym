@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments/layout :: menu('')}"></aside>
+    <main class="contenido">
+        <div class="cabecera"><h1>No se pudo completar la acción</h1></div>
+        <p class="aviso bad" th:text="${error != null} ? ${error} : 'Algo salió mal. Vuelve al inicio e inténtalo de nuevo.'"></p>
+        <p><a class="btn" th:href="@{/}">Volver al inicio</a></p>
+    </main>
+</div>
+</body>
+</html>

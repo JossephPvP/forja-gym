@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clases y reservas')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments/layout :: menu('clases')}"></aside>
+    <main class="contenido">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="cabecera">
+            <h1>Clases y reservas</h1>
+            <a class="btn btn-brasa" th:href="@{/clases/nueva}">Crear clase</a>
+        </div>
+
+        <p class="vacio" th:if="${#lists.isEmpty(clases)}">No hay clases programadas. Crea la primera con el botón de arriba.</p>
+        <div class="tabla-wrap" th:unless="${#lists.isEmpty(clases)}">
+            <table class="tabla">
+                <thead><tr><th>Clase</th><th>Instructor</th><th>Fecha y hora</th><th>Cupos libres</th><th></th></tr></thead>
+                <tbody>
+                <tr th:each="c : ${clases}">
+                    <td><strong th:text="${c.nombre}">Spinning</strong></td>
+                    <td th:text="${c.instructor}">Instructor</td>
+                    <td th:text="${#temporals.format(c.fechaHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 07:00</td>
+                    <td>
+                        <span th:class="'badge ' + (${c.cuposDisponibles > 0} ? 'ok' : 'bad')"
+                              th:text="${c.cuposDisponibles} + ' de ' + ${c.cupo}">5 de 15</span>
+                    </td>
+                    <td class="acciones">
+                        <a class="btn btn-chico" th:href="@{/clases/{id}(id=${c.id})}">Ver reservas</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

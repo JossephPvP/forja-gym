@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' | FORJA Gym'">FORJA Gym</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<aside th:fragment="menu(activo)" class="menu">
+    <a class="marca" th:href="@{/}">
+        <span class="marca-nombre">FORJA</span>
+        <span class="marca-sub">Gimnasio</span>
+    </a>
+    <nav aria-label="Principal">
+        <a th:href="@{/}" th:classappend="${activo == 'inicio'} ? 'activo'">Inicio</a>
+        <a th:href="@{/asistencia}" th:classappend="${activo == 'asistencia'} ? 'activo'">Control de ingreso</a>
+        <a th:href="@{/clientes}" th:classappend="${activo == 'clientes'} ? 'activo'">Clientes</a>
+        <a th:href="@{/membresias}" th:classappend="${activo == 'membresias'} ? 'activo'">Membresías</a>
+        <a th:href="@{/pagos}" th:classappend="${activo == 'pagos'} ? 'activo'">Pagos</a>
+        <a th:href="@{/clases}" th:classappend="${activo == 'clases'} ? 'activo'">Clases y reservas</a>
+        <a th:href="@{/planes}" th:classappend="${activo == 'planes'} ? 'activo'">Planes</a>
+    </nav>
+</aside>
+
+<div th:fragment="mensajes">
+    <p class="aviso ok" th:if="${mensaje != null}" th:text="${mensaje}" role="status"></p>
+    <p class="aviso bad" th:if="${error != null}" th:text="${error}" role="alert"></p>
+</div>
+
+</body>
+</html>

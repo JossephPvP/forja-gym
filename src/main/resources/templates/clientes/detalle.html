@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cliente')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments/layout :: menu('clientes')}"></aside>
+    <main class="contenido">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="cabecera">
+            <h1 th:text="${cliente.nombreCompleto}">Cliente</h1>
+            <div class="cabecera-acciones">
+                <a class="btn btn-brasa" th:href="@{/membresias/nueva(clienteId=${cliente.id})}">Nueva membresía</a>
+                <a class="btn btn-linea" th:href="@{/clientes/{id}/editar(id=${cliente.id})}">Editar datos</a>
+                <form th:action="@{/clientes/{id}/baja(id=${cliente.id})}" method="post"
+                      data-confirm="¿Dar de baja a este cliente? Ya no aparecerá en la lista.">
+                    <button type="submit" class="btn btn-peligro">Dar de baja</button>
+                </form>
+            </div>
+        </div>
+
+        <section class="ficha">
+            <dl>
+                <div><dt>DNI</dt><dd th:text="${cliente.dni}">00000000</dd></div>
+                <div><dt>Teléfono</dt><dd th:text="${cliente.telefono != null and cliente.telefono != ''} ? ${cliente.telefono} : 'Sin registrar'">999999999</dd></div>
+                <div><dt>Correo</dt><dd th:text="${cliente.email != null and cliente.email != ''} ? ${cliente.email} : 'Sin registrar'">correo</dd></div>
+                <div><dt>Cliente desde</dt><dd th:text="${#temporals.format(cliente.fechaRegistro, 'dd/MM/yyyy')}">01/01/2026</dd></div>
+            </dl>
+        </section>
+
+        <section class="bloque">
+            <div class="bloque-cab"><h2>Membresías</h2></div>
+            <p class="vacio" th:if="${#lists.isEmpty(membresias)}">Todavía no tiene membresías. Usa “Nueva membresía” para registrar la primera.</p>
+            <div class="tabla-wrap" th:unless="${#lists.isEmpty(membresias)}">
+                <table class="tabla">
+                    <thead><tr><th>Plan</th><th>Inicio</th><th>Fin</th><th>Monto</th><th>Estado</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="m : ${membresias}">
+                        <td th:text="${m.plan.nombre}">Mensual</td>
+                        <td th:text="${#temporals.format(m.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${#temporals.format(m.fechaFin, 'dd/MM/yyyy')}">30/01/2026</td>
+                        <td th:text="'S/ ' + ${#numbers.formatDecimal(m.monto, 1, 'COMMA', 2, 'POINT')}">S/ 90.00</td>
+                        <td><span th:class="'badge ' + ${m.estado.css}" th:text="${m.estado.label}">Activa</span></td>
+                        <td class="acciones">
+                            <form th:if="${m.estado.name() != 'CANCELADA' and m.estado.name() != 'VENCIDA'}"
+                                  th:action="@{/membresias/{id}/cancelar(id=${m.id})}" method="post"
+                                  data-confirm="¿Cancelar esta membresía?">
+                                <button type="submit" class="btn btn-chico btn-peligro">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="bloque">
+            <div class="bloque-cab"><h2>Pagos</h2></div>
+            <p class="vacio" th:if="${#lists.isEmpty(pagos)}">Sin pagos registrados.</p>
+            <div class="tabla-wrap" th:unless="${#lists.isEmpty(pagos)}">
+                <table class="tabla">
+                    <thead><tr><th>Fecha</th><th>Plan</th><th>Método</th><th>Monto</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${pagos}">
+                        <td th:text="${#temporals.format(p.fechaPago, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
+                        <td th:text="${p.membresia.plan.nombre}">Mensual</td>
+                        <td th:text="${p.metodo.label}">Efectivo</td>
+                        <td th:text="'S/ ' + ${#numbers.formatDecimal(p.monto, 1, 'COMMA', 2, 'POINT')}">S/ 90.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

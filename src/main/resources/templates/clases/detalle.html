@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Clase')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments/layout :: menu('clases')}"></aside>
+    <main class="contenido">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="cabecera">
+            <h1 th:text="${clase.nombre}">Clase</h1>
+            <p class="cabecera-dato">
+                <span th:text="${clase.instructor}">Instructor</span>,
+                <span th:text="${#temporals.format(clase.fechaHora, 'dd/MM/yyyy HH:mm')}">01/01/2026 07:00</span>
+            </p>
+        </div>
+
+        <section class="bloque">
+            <div class="bloque-cab">
+                <h2>Reservar un cupo</h2>
+                <span th:class="'badge ' + (${clase.cuposDisponibles > 0} ? 'ok' : 'bad')"
+                      th:text="${clase.cuposDisponibles} + ' cupos libres de ' + ${clase.cupo}">5 cupos libres de 15</span>
+            </div>
+            <form class="ingreso-form ingreso-claro" th:action="@{/clases/{id}/reservas(id=${clase.id})}" method="post">
+                <input type="text" name="dni" inputmode="numeric" maxlength="8" pattern="\d{8}"
+                       placeholder="DNI del cliente" aria-label="DNI del cliente" required>
+                <button type="submit" class="btn btn-brasa">Reservar</button>
+            </form>
+        </section>
+
+        <section class="bloque">
+            <div class="bloque-cab"><h2>Reservas</h2></div>
+            <p class="vacio" th:if="${#lists.isEmpty(reservas)}">Nadie ha reservado todavía.</p>
+            <div class="tabla-wrap" th:unless="${#lists.isEmpty(reservas)}">
+                <table class="tabla">
+                    <thead><tr><th>Cliente</th><th>DNI</th><th>Reservó</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="r : ${reservas}">
+                        <td><a th:href="@{/clientes/{id}(id=${r.cliente.id})}" th:text="${r.cliente.nombreCompleto}">Cliente</a></td>
+                        <td th:text="${r.cliente.dni}">00000000</td>
+                        <td th:text="${#temporals.format(r.fechaReserva, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
+                        <td class="acciones">
+                            <form th:action="@{/clases/{c}/reservas/{r}/cancelar(c=${clase.id},r=${r.id})}" method="post"
+                                  data-confirm="¿Cancelar esta reserva?">
+                                <button type="submit" class="btn btn-chico btn-peligro">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p><a class="btn btn-linea" th:href="@{/clases}">Volver a las clases</a></p>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

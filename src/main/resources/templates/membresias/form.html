@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nueva membresía')}"></head>
+<body>
+<div class="app">
+    <aside th:replace="~{fragments/layout :: menu('membresias')}"></aside>
+    <main class="contenido">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="cabecera"><h1>Nueva membresía</h1></div>
+
+        <form class="form" th:action="@{/membresias}" method="post">
+            <label class="campo campo-ancho">Cliente
+                <select name="clienteId" required>
+                    <option value="">Elige un cliente</option>
+                    <option th:each="c : ${clientes}" th:value="${c.id}"
+                            th:text="${c.nombreCompleto} + ' (' + ${c.dni} + ')'"
+                            th:selected="${c.id == clienteId}">Cliente</option>
+                </select>
+            </label>
+
+            <label class="campo">Plan
+                <select name="planId" id="planId" required>
+                    <option value="">Elige un plan</option>
+                    <option th:each="p : ${planes}" th:value="${p.id}"
+                            th:attr="data-dias=${p.duracionDias},data-precio=${p.precio}"
+                            th:text="${p.nombre} + ' – S/ ' + ${#numbers.formatDecimal(p.precio, 1, 'COMMA', 2, 'POINT')}">Plan</option>
+                </select>
+            </label>
+
+            <label class="campo">Empieza el
+                <input type="date" name="fechaInicio" id="fechaInicio" required
+                       th:value="${#temporals.format(inicio, 'yyyy-MM-dd')}">
+            </label>
+
+            <label class="campo">Método de pago
+                <select name="metodo" required>
+                    <option th:each="m : ${metodos}" th:value="${m.name()}" th:text="${m.label}">Efectivo</option>
+                </select>
+            </label>
+
+            <div class="resumen campo-ancho" aria-live="polite">
+                <div><span>Total a cobrar</span><strong id="resumenMonto">—</strong></div>
+                <div><span>Termina el</span><strong id="resumenFin">—</strong></div>
+            </div>
+
+            <div class="form-acciones">
+                <button type="submit" class="btn btn-brasa">Registrar y cobrar</button>
+                <a class="btn btn-linea" th:href="@{/membresias}">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

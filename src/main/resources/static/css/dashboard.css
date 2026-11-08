@@ -1,0 +1,27 @@
+/* Estilos propios del panel general (se carga después de style.css) */
+
+.ingreso-barra { padding: 20px clamp(20px, 3vw, 32px); }
+.ingreso-barra h2 { font-size: 1.7rem; }
+.ingreso-barra .ingreso-texto p { max-width: none; }
+
+.graficos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.grafico {
+    background: var(--papel);
+    border-radius: 6px;
+    padding: 16px clamp(16px, 2vw, 24px) 12px;
+    min-width: 0;
+}
+.grafico h2 { font-size: 1.3rem; margin-bottom: 12px; }
+
+.grafico-caja { position: relative; height: 250px; }
+.grafico-caja .vacio { margin: 0; padding: 90px 0 0; text-align: center; }
+
+@media (max-width: 960px) {
+    .graficos { grid-template-columns: 1fr; }
+}
